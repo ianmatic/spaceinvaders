@@ -3,7 +3,7 @@ using namespace Simplex;
 void Application::InitVariables(void)
 {
 	//Change this to your name and email
-	m_sProgrammer = "Alberto Bobadilla - labigm@rit.edu";
+	m_sProgrammer = "Plz Help";
 
 	//Set the position and target of the camera
 	//(I'm at [0,0,10], looking at [0,0,0] and up is the positive Y axis)
@@ -19,6 +19,19 @@ void Application::InitVariables(void)
 	//Get the singleton
 	m_pMyMeshMngr = MyMeshManager::GetInstance();
 	m_pMyMeshMngr->SetCamera(m_pCamera);
+
+	//make the enemies
+	for (int i = -10; i < 10; i += 2) {
+		for (int j = 0; j < 10; j += 1) {
+			//uIndex++;
+			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj");
+			vector3 v3Position = vector3(i, j * 2, 0);
+			matrix4 m4Position = glm::translate(v3Position);
+			m_pEntityMngr->SetModelMatrix(m4Position);
+		}
+	}
+
+	m_pEntityMngr->Update();
 }
 void Application::Update(void)
 {
@@ -32,11 +45,24 @@ void Application::Update(void)
 	CameraRotation();
 
 	//Add objects to the Manager
-	for (int j = -50; j < 50; j += 2)
-	{
-		for (int i = -50; i < 50; i += 2)
-		{
-			m_pMyMeshMngr->AddConeToRenderList(glm::translate(vector3(i, 0.0f, j)));
+	//for (int j = -50; j < 50; j += 2)
+	//{
+	//	for (int i = -50; i < 50; i += 2)
+	//	{
+	//		m_pMyMeshMngr->AddCubeToRenderList(glm::translate(vector3(i, 0.0f, j)));
+	//	}
+	//}
+
+	//make the floor
+	matrix4 floorMat = IDENTITY_M4;
+	floorMat = glm::translate(floorMat,vector3(0, -15, 0));
+	floorMat = glm::scale(floorMat, vector3(1000, 1, 1000));
+	m_pMyMeshMngr->AddCubeToRenderList(floorMat);
+
+	//make the enemies
+	for (int i = -10; i < 10; i += 2) {
+		for (int j = 0; j < 10; j += 1) {
+			m_pMyMeshMngr->AddCubeToRenderList(glm::translate(vector3(i, j * 2, 0)));
 		}
 	}
 }
