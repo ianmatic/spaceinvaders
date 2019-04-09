@@ -20,6 +20,9 @@ void Application::InitVariables(void)
 	m_pMyMeshMngr = MyMeshManager::GetInstance();
 	m_pMyMeshMngr->SetCamera(m_pCamera);
 
+
+
+
 	//make the enemies
 	for (int i = -10; i < 10; i += 2) {
 		for (int j = 0; j < 10; j += 1) {
@@ -44,27 +47,17 @@ void Application::Update(void)
 	//Is the first person camera active?
 	CameraRotation();
 
-	//Add objects to the Manager
-	//for (int j = -50; j < 50; j += 2)
-	//{
-	//	for (int i = -50; i < 50; i += 2)
-	//	{
-	//		m_pMyMeshMngr->AddCubeToRenderList(glm::translate(vector3(i, 0.0f, j)));
-	//	}
-	//}
+	//Update Entity Manager
+	m_pEntityMngr->Update();
+
+	//Add objects to render list
+	m_pEntityMngr->AddEntityToRenderList(-1, true);
 
 	//make the floor
 	matrix4 floorMat = IDENTITY_M4;
 	floorMat = glm::translate(floorMat,vector3(0, -15, 0));
 	floorMat = glm::scale(floorMat, vector3(1000, 1, 1000));
 	m_pMyMeshMngr->AddCubeToRenderList(floorMat);
-
-	//make the enemies
-	for (int i = -10; i < 10; i += 2) {
-		for (int j = 0; j < 10; j += 1) {
-			m_pMyMeshMngr->AddCubeToRenderList(glm::translate(vector3(i, j * 2, 0)));
-		}
-	}
 }
 void Application::Display(void)
 {
