@@ -5,6 +5,7 @@
 using namespace Simplex;
 void Application::InitVariables(void)
 {
+
 	//Set the position and target of the camera
 	m_pCameraMngr->SetPositionTargetAndUpward(
 		vector3(0.0f, 0.0f, 100.0f), //Position
@@ -22,7 +23,7 @@ void Application::InitVariables(void)
 	for (int i = -10; i < 10; i += 2) {
 		for (int j = 0; j < 10; j += 1) {
 			//uIndex++;
-			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj");
+			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", "NA", true);
 			vector3 v3Position = vector3(i, j * 2, 0);
 			matrix4 m4Position = glm::translate(v3Position);
 			m_pEntityMngr->SetModelMatrix(m4Position);

@@ -66,6 +66,8 @@ private:
 	sf::Sound m_sound; //sound effect
 	sf::Music m_soundBGM; //background music
 
+	std::vector<bullet> bullets;
+
 public:
 #pragma region Constructor / Run / Destructor
 	/*
