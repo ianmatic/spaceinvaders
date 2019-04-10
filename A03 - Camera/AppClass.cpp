@@ -20,9 +20,6 @@ void Application::InitVariables(void)
 	m_pMyMeshMngr = MyMeshManager::GetInstance();
 	m_pMyMeshMngr->SetCamera(m_pCamera);
 
-
-
-
 	//make the enemies
 	for (int i = -10; i < 10; i += 2) {
 		for (int j = 0; j < 10; j += 1) {
@@ -55,7 +52,7 @@ void Application::Update(void)
 
 	//Update Entity Manager
 	m_pEntityMngr->Update();
-
+	//
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
 

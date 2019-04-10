@@ -91,6 +91,11 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 	switch (a_event.key.code)
 	{
 	default: break;
+	case sf::Keyboard::Space: {
+		//insert shoot code here
+		Bullet b = Bullet();
+		break;
+	}
 	case sf::Keyboard::Escape:
 		m_bRunning = false;
 		break;
