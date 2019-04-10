@@ -28,6 +28,8 @@ class MyEntity
 
 	static std::map<String, MyEntity*> m_IDMap; //a map of the unique ID's
 
+	bool enemy;
+
 public:
 	/*
 	Usage: Constructor that specifies the name attached to the MyEntity
@@ -36,7 +38,7 @@ public:
 	-	String a_sUniqueID -> Name wanted as identifier, if not available will generate one
 	Output: class object instance
 	*/
-	MyEntity(String a_sFileName, String a_sUniqueID = "NA");
+	MyEntity(String a_sFileName, String a_sUniqueID = "NA", bool enemy = false);
 	/*
 	Usage: Copy Constructor
 	Arguments: class object to copy
@@ -171,6 +173,14 @@ public:
 	OUTPUT: ---
 	*/
 	void SortDimensions(void);
+
+
+	/*
+	USAGE: Gets the bool of the entity that indicates if enemy
+	ARGUMENTS: ----
+	OUTPUT: ---
+	*/
+	bool GetEnemy();
 
 private:
 	/*

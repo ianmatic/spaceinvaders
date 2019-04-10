@@ -29,6 +29,8 @@ void Simplex::MyEntity::Init(void)
 	m_m4ToWorld = IDENTITY_M4;
 	m_sUniqueID = "";
 	m_nDimensionCount = 0;
+
+	enemy = false;
 }
 void Simplex::MyEntity::Swap(MyEntity& other)
 {
@@ -42,6 +44,8 @@ void Simplex::MyEntity::Swap(MyEntity& other)
 	std::swap(m_bSetAxis, other.m_bSetAxis);
 	std::swap(m_nDimensionCount, other.m_nDimensionCount);
 	std::swap(m_DimensionArray, other.m_DimensionArray);
+
+	std::swap(enemy, other.enemy);
 }
 void Simplex::MyEntity::Release(void)
 {
@@ -58,7 +62,7 @@ void Simplex::MyEntity::Release(void)
 	m_IDMap.erase(m_sUniqueID);
 }
 //The big 3
-Simplex::MyEntity::MyEntity(String a_sFileName, String a_sUniqueID)
+Simplex::MyEntity::MyEntity(String a_sFileName, String a_sUniqueID, bool enemy)
 {
 	Init();
 	m_pModel = new Model();
@@ -71,6 +75,8 @@ Simplex::MyEntity::MyEntity(String a_sFileName, String a_sUniqueID)
 		m_IDMap[a_sUniqueID] = this;
 		m_pRigidBody = new MyRigidBody(m_pModel->GetVertexList()); //generate a rigid body
 		m_bInMemory = true; //mark this entity as viable
+
+		this->enemy = enemy;
 	}
 }
 Simplex::MyEntity::MyEntity(MyEntity const& other)
@@ -85,6 +91,8 @@ Simplex::MyEntity::MyEntity(MyEntity const& other)
 	m_bSetAxis = other.m_bSetAxis;
 	m_nDimensionCount = other.m_nDimensionCount;
 	m_DimensionArray = other.m_DimensionArray;
+
+	enemy = other.enemy;
 
 }
 MyEntity& Simplex::MyEntity::operator=(MyEntity const& other)
@@ -257,4 +265,9 @@ void Simplex::MyEntity::ClearCollisionList(void)
 void Simplex::MyEntity::SortDimensions(void)
 {
 	std::sort(m_DimensionArray, m_DimensionArray + m_nDimensionCount);
+}
+
+bool Simplex::MyEntity::GetEnemy()
+{
+	return enemy;
 }
