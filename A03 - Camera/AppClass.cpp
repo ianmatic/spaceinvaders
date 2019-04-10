@@ -47,17 +47,19 @@ void Application::Update(void)
 	//Is the first person camera active?
 	CameraRotation();
 
+	//make the floor
+	matrix4 floorMat = IDENTITY_M4;
+	floorMat = glm::translate(floorMat, vector3(0, -15, 0));
+	floorMat = glm::scale(floorMat, vector3(1000, 1, 1000));
+	m_pMyMeshMngr->AddCubeToRenderList(floorMat);
+
 	//Update Entity Manager
 	m_pEntityMngr->Update();
 
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
 
-	//make the floor
-	matrix4 floorMat = IDENTITY_M4;
-	floorMat = glm::translate(floorMat,vector3(0, -15, 0));
-	floorMat = glm::scale(floorMat, vector3(1000, 1, 1000));
-	m_pMyMeshMngr->AddCubeToRenderList(floorMat);
+
 }
 void Application::Display(void)
 {
