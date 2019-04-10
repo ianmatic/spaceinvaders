@@ -46,7 +46,7 @@ void Application::Update(void)
 
 	//Update Entity Manager
 	m_pEntityMngr->Update();
-
+	//
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
 
