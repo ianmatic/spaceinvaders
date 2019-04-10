@@ -27,9 +27,10 @@ class Application
 
 	MyEntityManager* m_pEntityMngr = nullptr; //Entity Manager
 	uint m_uObjects = 0; //Number of objects in the scene
+	uint bulletID = 0;
 
 private:
-	String m_sProgrammer = "Ian Matic - imm2853@rit.edu"; //programmer
+	String m_sProgrammer = "Plz Help"; //programmer
 
 	static ImGuiObject gui; //GUI object
 	bool m_bGUI_Main = true; //show Main GUI window?

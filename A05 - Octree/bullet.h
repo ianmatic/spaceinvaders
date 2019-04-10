@@ -6,12 +6,14 @@ class bullet
 	MyEntityManager* EntityMngr = nullptr;
 public:
 	bullet();
-	bullet(vector3* positon);
+	bullet(vector3 positon,uint id);
 	~bullet();
 	//transform position
-	void Update();
+	void Update(matrix4 mat4);
+
+	String uniqueID;
 
 private:
-	vector3* bulletPos;
+	vector3 bulletPos;
 };
 

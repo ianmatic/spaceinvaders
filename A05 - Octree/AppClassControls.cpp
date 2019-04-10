@@ -16,7 +16,7 @@ void Application::ProcessMouseMovement(sf::Event a_event)
 	gui.io.MousePos = ImVec2(m_v3Mouse.x, m_v3Mouse.y);
 }
 void Application::ProcessMousePressed(sf::Event a_event)
-{
+{/*
 	switch (a_event.mouseButton.button)
 	{
 	default: break;
@@ -34,7 +34,7 @@ void Application::ProcessMousePressed(sf::Event a_event)
 	}
 
 	for (int i = 0; i < 3; i++)
-		gui.io.MouseDown[i] = gui.m_bMousePressed[i];
+		gui.io.MouseDown[i] = gui.m_bMousePressed[i];*/
 }
 void Application::ProcessMouseReleased(sf::Event a_event)
 {
@@ -97,7 +97,8 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 	default: break;
 	case sf::Keyboard::Space: {
 		//insert shoot code here
-		bullet b = bullet(&(m_pCameraMngr->GetPosition()));
+		bullet b = bullet(m_pCameraMngr->GetPosition(), bulletID);
+		bulletID++;
 		bullets.push_back(b);
 		break;
 	}
@@ -428,22 +429,16 @@ void Application::ProcessKeyboard(void)
 		fMultiplier = 5.0f;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-		m_pCameraMngr->MoveForward(m_fMovementSpeed * fMultiplier);
+		m_pCameraMngr->MoveVertical(m_fMovementSpeed * fMultiplier);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-		m_pCameraMngr->MoveForward(-m_fMovementSpeed * fMultiplier);
+		m_pCameraMngr->MoveVertical(-m_fMovementSpeed * fMultiplier);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		m_pCameraMngr->MoveSideways(-m_fMovementSpeed * fMultiplier);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		m_pCameraMngr->MoveSideways(m_fMovementSpeed * fMultiplier);
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-		m_pCameraMngr->MoveVertical(-m_fMovementSpeed * fMultiplier);
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
-		m_pCameraMngr->MoveVertical(m_fMovementSpeed * fMultiplier);
 #pragma endregion
 }
 //Joystick

@@ -52,8 +52,9 @@ void Application::Update(void)
 
 	//update bullet positions
 	for (int k = 0; k < bullets.size(); k++)
-		bullets[k].Update();
-
+	{
+		bullets[k].Update(m_pEntityMngr->GetModelMatrix(bullets[k].uniqueID));
+	}
 	//make the floor
 	matrix4 floorMat = IDENTITY_M4;
 	floorMat = glm::translate(floorMat, vector3(0, -15, 0));
@@ -69,12 +70,12 @@ void Application::Display(void)
 	ClearScreen();
 
 	//display octree
-	if (octID == -1) {
-		root->Display(C_YELLOW);
-	}
-	else {
-		root->Display(octID, C_YELLOW);
-	}
+	//if (octID == -1) {
+	//	root->Display(C_YELLOW);
+	//}
+	//else {
+	//	root->Display(octID, C_YELLOW);
+	//}
 	
 	// draw a skybox
 	m_pMeshMngr->AddSkyboxToRenderList();
