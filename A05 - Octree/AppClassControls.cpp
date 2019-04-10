@@ -97,7 +97,8 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 	default: break;
 	case sf::Keyboard::Space: {
 		//insert shoot code here
-		bullet b = bullet();
+		bullet b = bullet(&(m_pCameraMngr->GetPosition()));
+		bullets.push_back(b);
 		break;
 	}
 	case sf::Keyboard::Escape:

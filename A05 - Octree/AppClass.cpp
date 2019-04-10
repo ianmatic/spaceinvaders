@@ -49,6 +49,10 @@ void Application::Update(void)
 	//Update Entity Manager
 	m_pEntityMngr->Update();
 
+	//update bullet positions
+	for (int k = 0; k < bullets.size(); k++)
+		bullets[k].Update();
+
 	//make the floor
 	matrix4 floorMat = IDENTITY_M4;
 	floorMat = glm::translate(floorMat, vector3(0, -15, 0));
