@@ -18,20 +18,17 @@ void Application::InitVariables(void)
 #else
 	uint uInstances = 1849;
 #endif
-	int nSquare = static_cast<int>(std::sqrt(uInstances));
-	m_uObjects = nSquare * nSquare;
-	uint uIndex = -1;
-	for (int i = 0; i < nSquare; i++)
-	{
-		for (int j = 0; j < nSquare; j++)
-		{
-			uIndex++;
+	//make the enemies
+	for (int i = -10; i < 10; i += 2) {
+		for (int j = 0; j < 10; j += 1) {
+			//uIndex++;
 			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj");
-			vector3 v3Position = vector3(glm::sphericalRand(34.0f));
+			vector3 v3Position = vector3(i, j * 2, 0);
 			matrix4 m4Position = glm::translate(v3Position);
 			m_pEntityMngr->SetModelMatrix(m4Position);
 		}
 	}
+
 	//setup root
 	octLevels = 1;
 	root = new MyOctant(octLevels, 5);
@@ -51,6 +48,12 @@ void Application::Update(void)
 	
 	//Update Entity Manager
 	m_pEntityMngr->Update();
+
+	//make the floor
+	matrix4 floorMat = IDENTITY_M4;
+	floorMat = glm::translate(floorMat, vector3(0, -15, 0));
+	floorMat = glm::scale(floorMat, vector3(1000, 1, 1000));
+	m_pMeshMngr->AddCubeToRenderList(floorMat, C_WHITE);
 
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
