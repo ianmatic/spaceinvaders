@@ -251,6 +251,8 @@ public:
 	void ChangePitchAndYaw(float xAngle, float yAngle);
 
 	//Rotate about X-axis
+
+	vector3 GetForwardVector();
 };	
 
 } //namespace Simplex

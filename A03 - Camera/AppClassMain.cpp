@@ -241,6 +241,9 @@ void Application::Init(String a_sApplicationName, uint a_uWidth, uint a_uHeight,
 	//Init GUI
 	InitIMGUI();
 
+	//Init Entity Manager
+	m_pEntityMngr = MyEntityManager::GetInstance();
+
 	//Init controllers
 	InitControllers();
 

@@ -11,6 +11,9 @@ Date: 2017/05
 #include "imgui\ImGuiObject.h"
 
 #include "MyMeshManager.h"
+#include "MyEntityManager.h"
+
+#include "Bullet.h"
 namespace Simplex
 {
 
@@ -40,6 +43,9 @@ private:
 	Simplex::CameraManager* m_pCameraMngr = nullptr; //Singleton for the camera manager
 	ControllerInput* m_pController[8]; //Controller
 	uint m_uActCont = 0; //Active Controller of the Application
+
+	//new stuff
+	MyEntityManager* m_pEntityMngr = nullptr; //Entity Manager
 
 public:
 #pragma region Constructor / Run / Destructor

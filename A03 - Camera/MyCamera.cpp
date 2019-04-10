@@ -237,3 +237,8 @@ void MyCamera::ChangePitchAndYaw(float xAngle, float yAngle)
 
 	
 }
+
+vector3 Simplex::MyCamera::GetForwardVector()
+{
+	return cameraFront;
+}
