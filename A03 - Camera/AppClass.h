@@ -12,6 +12,8 @@ Date: 2017/05
 
 #include "MyMeshManager.h"
 #include "MyEntityManager.h"
+
+#include "Bullet.h"
 namespace Simplex
 {
 
