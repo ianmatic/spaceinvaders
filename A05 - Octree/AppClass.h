@@ -30,6 +30,12 @@ class Application
 	uint bulletID = 0;
 	uint enemyID = 0;
 
+	int timer = 60; 
+
+	float timeSinceStart = 0;
+	float deltaTime = 0;
+	float oldTimeSinceStart = 0;
+
 private:
 	String m_sProgrammer = "Plz Help"; //programmer
 

@@ -21,10 +21,10 @@ void Application::InitVariables(void)
 #endif
 	//make the enemies
 	for (int i = -10; i < 10; i += 2) {
-		for (int j = 0; j < 10; j += 1) {
+		for (int j = -10; j < 10; j += 2) {
 			//uIndex++;
 			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", std::to_string(enemyID) + "e", true);
-			vector3 v3Position = vector3(i, j * 2, 0);
+			vector3 v3Position = vector3(i, j, 0);
 			matrix4 m4Position = glm::translate(v3Position);
 			m_pEntityMngr->SetModelMatrix(m4Position);
 
@@ -63,6 +63,10 @@ void Application::Update(void)
 	floorMat = glm::scale(floorMat, vector3(1000, 1, 1000));
 	m_pMeshMngr->AddCubeToRenderList(floorMat, C_WHITE);
 
+	int randNum = rand() % 10;
+
+	timer -= 1;
+
 	//move enemies
 	for (int i = 0; i < m_pEntityMngr->GetEnemyCount(); i++) {
 
@@ -73,8 +77,30 @@ void Application::Update(void)
 
 
 		matrix4 enemyMat = m_pEntityMngr->GetModelMatrix(enemyID);
-		enemyMat = glm::translate(enemyMat, vector3(0, 0, 1));
+		//move enemy toward player
+		enemyMat = glm::translate(enemyMat, vector3(0, 0, .1));
+
+		//move enemy in x and y directions
+
+		if (timer <= 0) {
+			if (randNum < 2) {
+				enemyMat = glm::translate(enemyMat, vector3(1, 0, 0));
+			}
+			else if (randNum >= 2 && randNum < 4) {
+				enemyMat = glm::translate(enemyMat, vector3(-1, 0, 0));
+			}
+			else if (randNum >= 4 && randNum < 6) {
+				enemyMat = glm::translate(enemyMat, vector3(0, 1, 0));
+			}
+			else if (randNum >= 6 && randNum < 8) {
+				enemyMat = glm::translate(enemyMat, vector3(0, -1, 0));
+			}
+		}
 		m_pEntityMngr->SetModelMatrix(enemyMat, enemyID);
+	}
+
+	if (timer <= 0) {
+		timer = 60;
 	}
 
 	//do collisions
