@@ -23,7 +23,7 @@ void Application::InitVariables(void)
 	for (int i = -10; i < 10; i += 2) {
 		for (int j = 0; j < 10; j += 1) {
 			//uIndex++;
-			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", std::to_string(enemyID), true);
+			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", std::to_string(enemyID) + "e", true);
 			vector3 v3Position = vector3(i, j * 2, 0);
 			matrix4 m4Position = glm::translate(v3Position);
 			m_pEntityMngr->SetModelMatrix(m4Position);
@@ -76,8 +76,10 @@ void Application::Update(void)
 			String enemyID = m_pEntityMngr->GetEnemies()[j]->GetUniqueID();
 			MyRigidBody* enemyRB = m_pEntityMngr->GetRigidBody(enemyID);
 
-			//collision
+			//collision detection
 			if (bulletRB->IsColliding(enemyRB)) {
+				//collision resolution
+				//SafeDelete(m_pEntityMngr->GetEnemies()[j]);
 				printf("colliding");
 			}
 		}
