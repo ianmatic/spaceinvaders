@@ -63,7 +63,19 @@ void Application::Update(void)
 	floorMat = glm::scale(floorMat, vector3(1000, 1, 1000));
 	m_pMeshMngr->AddCubeToRenderList(floorMat, C_WHITE);
 
-	//get current enemies
+	//move enemies
+	for (int i = 0; i < m_pEntityMngr->GetEnemyCount(); i++) {
+
+		//get enemy
+		String enemyID = m_pEntityMngr->GetEnemies()[i]->GetUniqueID();
+		MyRigidBody* enemyRB = m_pEntityMngr->GetRigidBody(enemyID);
+
+
+
+		matrix4 enemyMat = m_pEntityMngr->GetModelMatrix(enemyID);
+		enemyMat = glm::translate(enemyMat, vector3(0, 0, 1));
+		m_pEntityMngr->SetModelMatrix(enemyMat, enemyID);
+	}
 
 	//do collisions
 	for (int i = 0; i < bullets.size(); i++) {
