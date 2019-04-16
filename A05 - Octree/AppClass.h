@@ -28,6 +28,7 @@ class Application
 	MyEntityManager* m_pEntityMngr = nullptr; //Entity Manager
 	uint m_uObjects = 0; //Number of objects in the scene
 	uint bulletID = 0;
+	uint enemyID = 0;
 
 private:
 	String m_sProgrammer = "Plz Help"; //programmer

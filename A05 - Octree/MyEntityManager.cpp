@@ -16,6 +16,7 @@ void Simplex::MyEntityManager::Release(void)
 	}
 	m_uEntityCount = 0;
 	m_mEntityArray = nullptr;
+	enemyArray = nullptr;
 }
 Simplex::MyEntityManager* Simplex::MyEntityManager::GetInstance()
 {
@@ -46,6 +47,14 @@ int Simplex::MyEntityManager::GetEntityIndex(String a_sUniqueID)
 }
 //Accessors
 Simplex::uint Simplex::MyEntityManager::GetEntityCount(void) {	return m_uEntityCount; }
+MyEntity ** Simplex::MyEntityManager::GetEnemies()
+{
+	return enemyArray;
+}
+uint Simplex::MyEntityManager::GetEnemyCount()
+{
+	return enemyCount;
+}
 Simplex::Model* Simplex::MyEntityManager::GetModel(uint a_uIndex)
 {
 	//if the list is empty return
@@ -215,6 +224,32 @@ void Simplex::MyEntityManager::AddEntity(String a_sFileName, String a_sUniqueID,
 		m_mEntityArray = tempArray;
 		//add one entity to the count
 		++m_uEntityCount;
+
+		//deal with enemies
+		if (enemy) {
+			//allocate new enemy array
+			MyEntity** tempEnemyArray = new MyEntity*[enemyCount + 1];
+			
+			int tempCount = 0;
+
+			//copy over old array
+			for (int i = 0; i < enemyCount; i++) {
+				tempEnemyArray[tempCount] = enemyArray[i];
+				tempCount++;
+			}
+
+			//add new enemy
+			tempEnemyArray[tempCount] = pTemp;
+
+			if (enemyArray) {
+				delete[] enemyArray;
+			}
+
+			//set array
+			enemyArray = tempEnemyArray;
+
+			enemyCount++;
+		}
 	}
 }
 void Simplex::MyEntityManager::RemoveEntity(uint a_uIndex)

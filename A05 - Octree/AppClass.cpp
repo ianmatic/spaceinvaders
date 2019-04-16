@@ -23,10 +23,12 @@ void Application::InitVariables(void)
 	for (int i = -10; i < 10; i += 2) {
 		for (int j = 0; j < 10; j += 1) {
 			//uIndex++;
-			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", "NA", true);
+			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", std::to_string(enemyID), true);
 			vector3 v3Position = vector3(i, j * 2, 0);
 			matrix4 m4Position = glm::translate(v3Position);
 			m_pEntityMngr->SetModelMatrix(m4Position);
+
+			enemyID++;
 		}
 	}
 
@@ -60,6 +62,26 @@ void Application::Update(void)
 	floorMat = glm::translate(floorMat, vector3(0, -15, 0));
 	floorMat = glm::scale(floorMat, vector3(1000, 1, 1000));
 	m_pMeshMngr->AddCubeToRenderList(floorMat, C_WHITE);
+
+	//get current enemies
+
+	//do collisions
+	for (int i = 0; i < bullets.size(); i++) {
+		for (int j = 0; j < m_pEntityMngr->GetEnemyCount(); j++) {
+
+			//get bullet
+			MyRigidBody* bulletRB = m_pEntityMngr->GetRigidBody(bullets[i].uniqueID);
+
+			//get enemy
+			String enemyID = m_pEntityMngr->GetEnemies()[j]->GetUniqueID();
+			MyRigidBody* enemyRB = m_pEntityMngr->GetRigidBody(enemyID);
+
+			//collision
+			if (bulletRB->IsColliding(enemyRB)) {
+				printf("colliding");
+			}
+		}
+	}
 
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);

@@ -17,6 +17,9 @@ class MyEntityManager
 	uint m_uEntityCount = 0; //number of elements in the list
 	PEntity* m_mEntityArray = nullptr; //array of MyEntity pointers
 	static MyEntityManager* m_pInstance; // Singleton pointer
+
+	PEntity* enemyArray;
+	uint enemyCount = 0;
 public:
 	/*
 	Usage: Gets the singleton pointer
@@ -246,6 +249,10 @@ public:
 	OUTPUT: MyEntity count
 	*/
 	uint GetEntityCount(void);
+
+	MyEntity** GetEnemies();
+
+	uint GetEnemyCount();
 private:
 	/*
 	Usage: constructor

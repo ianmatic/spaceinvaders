@@ -365,7 +365,6 @@ bool MyRigidBody::IsColliding(MyRigidBody* const a_pOther)
 	//if they are colliding check the SAT
 	if (bColliding)
 	{
-
 		if (SAT(a_pOther) == 1) {
 			bColliding = false;// reset to false
 				//greater x or less x
@@ -481,13 +480,9 @@ bool MyRigidBody::IsColliding(MyRigidBody* const a_pOther)
 
 				//draw the other side
 				m_pMeshMngr->AddPlaneToRenderList(matrix, C_BLUE, 1);
-
-
 			}
-
 		}
 		else {
-
 			bColliding = true;
 		}
 
