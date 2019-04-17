@@ -24,9 +24,6 @@ bullet::bullet(vector3 position, uint id)
 	EntityMngr->SetModelMatrix(bulletMat);
 	//Update Entity Manager
 	EntityMngr->Update();
-
-	//Add objects to render list
-	EntityMngr->AddEntityToRenderList(-1, true);
 }
 
 

@@ -103,6 +103,8 @@ void Application::Update(void)
 		timer = 60;
 	}
 
+	bool resolved = false;
+
 	//do collisions
 	for (int i = 0; i < bullets.size(); i++) {
 		for (int j = 0; j < m_pEntityMngr->GetEnemyCount(); j++) {
@@ -118,15 +120,31 @@ void Application::Update(void)
 			//collision detection
 			if (bulletRB->IsColliding(enemyRB)) {
 				//collision resolution
-				//SafeDelete(m_pEntityMngr->GetEnemies()[j]);
 				printf("colliding");
 				m_pEntityMngr->RemoveEntity(enemyID);
-				m_pEntityMngr->RemoveEntity(bullets[i].uniqueID);
+				//m_pEntityMngr->RemoveEntity(bullets[i].uniqueID);
+
+				//remove from bullets
+				bullets.erase(bullets.begin() + i);
+
+				resolved = true;
+				break;
 			}
+		}
+
+		if (resolved) {
+			break;
 		}
 	}
 
 	//Add objects to render list
+
+	//bullets
+	for (int i = 0; i < bullets.size(); i++) {
+		m_pEntityMngr->AddEntityToRenderList(bullets[i].uniqueID, true);
+	}
+
+	//enemies
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
 }
 void Application::Display(void)

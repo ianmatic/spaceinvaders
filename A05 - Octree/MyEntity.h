@@ -182,8 +182,6 @@ public:
 	*/
 	bool GetEnemy();
 
-	String GetID();
-
 private:
 	/*
 	Usage: Deallocates member fields

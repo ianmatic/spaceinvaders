@@ -271,8 +271,3 @@ bool Simplex::MyEntity::GetEnemy()
 {
 	return enemy;
 }
-
-String Simplex::MyEntity::GetID()
-{
-	return m_sUniqueID;
-}

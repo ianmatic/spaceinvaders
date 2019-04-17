@@ -193,13 +193,12 @@ void Simplex::MyEntityManager::Update(void)
 			else {
 				int z = 0;
 			}
-
-
 		}
 	}
 }
 void Simplex::MyEntityManager::AddEntity(String a_sFileName, String a_sUniqueID, bool enemy)
 {
+
 	//Create a temporal entity to store the object
 	MyEntity* pTemp = new MyEntity(a_sFileName, a_sUniqueID, enemy);
 	//if I was able to generate it add it to the list
@@ -254,19 +253,65 @@ void Simplex::MyEntityManager::AddEntity(String a_sFileName, String a_sUniqueID,
 }
 void Simplex::MyEntityManager::RemoveEntity(uint a_uIndex)
 {
+	//std::cout << std::endl;
+	//for (int i = 0; i < m_uEntityCount; i++) {
+	//	std::cout << m_mEntityArray[i]->GetUniqueID() << std::endl;
+	//}
+
+
+
 	//if the list is empty return
 	if (m_uEntityCount == 0)
 		return;
 
 	// if out of bounds choose the last one
-	if (a_uIndex >= m_uEntityCount)
+	if (a_uIndex >= m_uEntityCount) {
 		a_uIndex = m_uEntityCount - 1;
+	}
+
 
 	// if the entity is not the very last we swap it for the last one
 	if (a_uIndex != m_uEntityCount - 1)
 	{
 		std::swap(m_mEntityArray[a_uIndex], m_mEntityArray[m_uEntityCount - 1]);
 	}
+
+	//take care of enemy
+	if (m_mEntityArray[m_uEntityCount - 1]->GetEnemy()) {
+
+		int enemyIndex = - 1;
+
+		//find enemy index
+		for (int i = 0; i < enemyCount; i++) {
+			if (m_mEntityArray[m_uEntityCount - 1] == enemyArray[i]) {
+				enemyIndex = i;
+			}
+		}
+
+		// if the enemy is not the very last we swap it for the last one
+		if (enemyIndex != enemyCount - 1 && enemyIndex >= 0) {
+			std::swap(enemyArray[enemyIndex], m_mEntityArray[enemyCount - 1]);
+		}
+
+
+		PEntity* tempEnemyArray = new PEntity[enemyCount - 1];
+
+		//fill new array
+		for (int i = 0; i < enemyCount - 1; i++) {
+			tempEnemyArray[i] = enemyArray[i];
+		}
+
+		//delete old array
+		if (enemyArray) {
+			delete[] enemyArray;
+		}
+
+		//assign new array
+		enemyArray = tempEnemyArray;
+
+		enemyCount--;
+	}
+
 	
 	//and then pop the last one
 	//create a new temp array with one less entry
@@ -283,8 +328,16 @@ void Simplex::MyEntityManager::RemoveEntity(uint a_uIndex)
 	}
 	//make the member pointer the temp pointer
 	m_mEntityArray = tempArray;
-	//add one entity to the count
+
+
+	//REMOVE one entity FROM the count
 	--m_uEntityCount;
+
+	std::cout << std::endl;
+
+	//for (int i = 0; i < m_uEntityCount; i++) {
+	//	std::cout << m_mEntityArray[i]->GetUniqueID() << std::endl;
+	//}
 }
 void Simplex::MyEntityManager::RemoveEntity(String a_sUniqueID)
 {
@@ -321,10 +374,15 @@ void Simplex::MyEntityManager::AddEntityToRenderList(uint a_uIndex, bool a_bRigi
 	if (a_uIndex >= m_uEntityCount)
 	{
 		//add for each one in the entity list
-		for (a_uIndex = 0; a_uIndex < m_uEntityCount; ++a_uIndex)
+		for (int i = 0; i < enemyCount; i++) {
+			enemyArray[i]->AddToRenderList(a_bRigidBody);
+		}
+
+
+		/*for (a_uIndex = 0; a_uIndex < m_uEntityCount; ++a_uIndex)
 		{
 			m_mEntityArray[a_uIndex]->AddToRenderList(a_bRigidBody);
-		}
+		}*/
 	}
 	else //do it for the specified one
 	{
