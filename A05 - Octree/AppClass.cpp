@@ -109,6 +109,7 @@ void Application::Update(void)
 
 			//get bullet
 			MyRigidBody* bulletRB = m_pEntityMngr->GetRigidBody(bullets[i].uniqueID);
+			//MyEntity* bullet = m_pEntityMngr->GetEntity(bullets[i].uniqueID);
 
 			//get enemy
 			String enemyID = m_pEntityMngr->GetEnemies()[j]->GetUniqueID();
@@ -119,6 +120,8 @@ void Application::Update(void)
 				//collision resolution
 				//SafeDelete(m_pEntityMngr->GetEnemies()[j]);
 				printf("colliding");
+				m_pEntityMngr->RemoveEntity(enemyID);
+				m_pEntityMngr->RemoveEntity(bullets[i].uniqueID);
 			}
 		}
 	}
