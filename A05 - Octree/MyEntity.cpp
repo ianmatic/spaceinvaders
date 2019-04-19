@@ -31,6 +31,7 @@ void Simplex::MyEntity::Init(void)
 	m_nDimensionCount = 0;
 
 	enemy = false;
+	hit = false;
 }
 void Simplex::MyEntity::Swap(MyEntity& other)
 {
@@ -46,6 +47,7 @@ void Simplex::MyEntity::Swap(MyEntity& other)
 	std::swap(m_DimensionArray, other.m_DimensionArray);
 
 	std::swap(enemy, other.enemy);
+	std::swap(hit, other.hit);
 }
 void Simplex::MyEntity::Release(void)
 {
@@ -93,6 +95,7 @@ Simplex::MyEntity::MyEntity(MyEntity const& other)
 	m_DimensionArray = other.m_DimensionArray;
 
 	enemy = other.enemy;
+	hit = other.hit;
 
 }
 MyEntity& Simplex::MyEntity::operator=(MyEntity const& other)
@@ -270,4 +273,14 @@ void Simplex::MyEntity::SortDimensions(void)
 bool Simplex::MyEntity::GetEnemy()
 {
 	return enemy;
+}
+
+bool Simplex::MyEntity::GetHit()
+{
+	return hit;
+}
+
+void Simplex::MyEntity::SetHit(bool value)
+{
+	hit = value;
 }

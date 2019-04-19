@@ -75,27 +75,35 @@ void Application::Update(void)
 		MyRigidBody* enemyRB = m_pEntityMngr->GetRigidBody(enemyID);
 
 
-
 		matrix4 enemyMat = m_pEntityMngr->GetModelMatrix(enemyID);
-		//move enemy toward player
-		enemyMat = glm::translate(enemyMat, vector3(0, 0, .1));
 
-		//move enemy in x and y directions
+		//enemy has been hit
+		if (MyEntity::GetEntity(enemyID)->GetHit()) {
+			//send enemy flying backward and down
+			enemyMat = glm::translate(enemyMat, vector3(0, -1, -.5));
+		}
+		else {
+			//move enemy toward player
+			enemyMat = glm::translate(enemyMat, vector3(0, 0, .1));
 
-		if (timer <= 0) {
-			if (randNum < 2) {
-				enemyMat = glm::translate(enemyMat, vector3(1, 0, 0));
-			}
-			else if (randNum >= 2 && randNum < 4) {
-				enemyMat = glm::translate(enemyMat, vector3(-1, 0, 0));
-			}
-			else if (randNum >= 4 && randNum < 6) {
-				enemyMat = glm::translate(enemyMat, vector3(0, 1, 0));
-			}
-			else if (randNum >= 6 && randNum < 8) {
-				enemyMat = glm::translate(enemyMat, vector3(0, -1, 0));
+			//move enemy in x and y directions
+
+			if (timer <= 0) {
+				if (randNum < 2) {
+					enemyMat = glm::translate(enemyMat, vector3(1, 0, 0));
+				}
+				else if (randNum >= 2 && randNum < 4) {
+					enemyMat = glm::translate(enemyMat, vector3(-1, 0, 0));
+				}
+				else if (randNum >= 4 && randNum < 6) {
+					enemyMat = glm::translate(enemyMat, vector3(0, 1, 0));
+				}
+				else if (randNum >= 6 && randNum < 8) {
+					enemyMat = glm::translate(enemyMat, vector3(0, -1, 0));
+				}
 			}
 		}
+		
 		m_pEntityMngr->SetModelMatrix(enemyMat, enemyID);
 	}
 
@@ -117,18 +125,29 @@ void Application::Update(void)
 			String enemyID = m_pEntityMngr->GetEnemies()[j]->GetUniqueID();
 			MyRigidBody* enemyRB = m_pEntityMngr->GetRigidBody(enemyID);
 
-			//collision detection
-			if (bulletRB->IsColliding(enemyRB)) {
-				//collision resolution
-				printf("colliding");
-				m_pEntityMngr->RemoveEntity(enemyID);
-				//m_pEntityMngr->RemoveEntity(bullets[i].uniqueID);
+			//hasn't been hit yet
+			if (!MyEntity::GetEntity(enemyID)->GetHit()) {
+				//collision detection between bullets and enemies
+				if (bulletRB->IsColliding(enemyRB)) {
+					MyEntity::GetEntity(enemyID)->SetHit(true);
+				}
+			}
+			//has been hit
+			else {
+				//enemy hits floor, don't feel like doing actual collisions, maybe later
+				if (MyEntity::GetEntity(enemyID)->GetRigidBody()->GetMinGlobal().y <= -15) {
+					//collision resolution
+					printf("colliding");
 
-				//remove from bullets
-				bullets.erase(bullets.begin() + i);
+					m_pEntityMngr->RemoveEntity(enemyID);
+					//m_pEntityMngr->RemoveEntity(bullets[i].uniqueID);
 
-				resolved = true;
-				break;
+					//remove from bullets
+					bullets.erase(bullets.begin() + i);
+
+					resolved = true;
+					break;
+				}
 			}
 		}
 

@@ -29,6 +29,7 @@ class MyEntity
 	static std::map<String, MyEntity*> m_IDMap; //a map of the unique ID's
 
 	bool enemy;
+	bool hit;
 
 public:
 	/*
@@ -181,6 +182,10 @@ public:
 	OUTPUT: ---
 	*/
 	bool GetEnemy();
+
+	bool GetHit();
+
+	void SetHit(bool);
 
 private:
 	/*
