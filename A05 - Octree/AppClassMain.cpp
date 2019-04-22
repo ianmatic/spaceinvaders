@@ -38,6 +38,7 @@ Application::~Application(void)
 	Simplex::ReleaseAllSingletons();
 	SafeDelete(m_pWindow);
 }
+
 void Application::InitControllers(void)
 {
 	//Make sure this method is only executed once

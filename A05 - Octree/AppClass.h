@@ -15,6 +15,10 @@ Date: 2017/06
 #include "MyOctant.h"
 #include "bullet.h"
 
+//stuff for random
+#include <cstdlib>
+#include <ctime>
+
 namespace Simplex
 {
 	//Adding Application to the Simplex namespace
@@ -37,6 +41,9 @@ class Application
 	float oldTimeSinceStart = 0;
 
 private:
+	//level and score info
+	int level = 1;
+	int score = 0;
 	String m_sProgrammer = "Plz Help"; //programmer
 
 	static ImGuiObject gui; //GUI object
@@ -121,6 +128,9 @@ public:
 #pragma endregion
 
 private:
+
+	//method to spawn enemies
+	void SpawnEnemies(int count);
 #pragma region Initialization / Release
 	/*
 	USAGE: Initialize the window

@@ -19,25 +19,33 @@ void Application::InitVariables(void)
 #else
 	uint uInstances = 1849;
 #endif
-	//make the enemies
-	for (int i = -10; i < 10; i += 2) {
-		for (int j = -10; j < 10; j += 2) {
-			//uIndex++;
-			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", std::to_string(enemyID) + "e", true);
-			vector3 v3Position = vector3(i, j, 0);
-			matrix4 m4Position = glm::translate(v3Position);
-			m_pEntityMngr->SetModelMatrix(m4Position);
-
-			enemyID++;
-		}
-	}
+	SpawnEnemies(1);
 
 	//setup root
 	octLevels = 1;
 	root = new MyOctant(octLevels, 5);
 
 	m_pEntityMngr->Update();
+	//seed rand
+	srand(static_cast <unsigned> (time(0)));
 }
+
+void Simplex::Application::SpawnEnemies(int count)
+{
+	//make the enemies
+	for (int i = 0; i < count; i++) {
+		m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", std::to_string(enemyID) + "e", true);
+		//get random x and y pos within a range
+		float x = -10 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (10 - (-10))));
+		float y = -10 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (10 - (-10))));
+		vector3 v3Position = vector3(x, y, 0);
+		matrix4 m4Position = glm::translate(v3Position);
+		m_pEntityMngr->SetModelMatrix(m4Position);
+
+		enemyID++;	
+	}
+}
+
 void Application::Update(void)
 {
 	//Update the system so it knows how much time has passed since the last call
@@ -67,6 +75,11 @@ void Application::Update(void)
 
 	timer -= 1;
 
+	//check to see if all enemies are dead
+	if (m_pEntityMngr->GetEnemyCount() <= 0) {
+		level++;
+		SpawnEnemies(level * 2);
+	}
 	//move enemies
 	for (int i = 0; i < m_pEntityMngr->GetEnemyCount(); i++) {
 
@@ -84,7 +97,7 @@ void Application::Update(void)
 		}
 		else {
 			//move enemy toward player
-			enemyMat = glm::translate(enemyMat, vector3(0, 0, .1));
+			enemyMat = glm::translate(enemyMat, vector3(0, 0, .05));
 
 			//move enemy in x and y directions
 

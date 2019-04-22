@@ -20,7 +20,7 @@ bullet::bullet(vector3 position, uint id)
 
 	uniqueID = std::to_string(id);
 
-	EntityMngr->AddEntity("Minecraft\\Pig.obj", uniqueID);
+	EntityMngr->AddEntity("Minecraft\\Cow.obj", uniqueID);
 	EntityMngr->SetModelMatrix(bulletMat);
 	//Update Entity Manager
 	EntityMngr->Update();
