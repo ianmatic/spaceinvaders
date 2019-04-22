@@ -11,6 +11,8 @@ public:
 	//transform position
 	void Update(matrix4 mat4);
 
+	float timer;
+
 	String uniqueID;
 
 private:

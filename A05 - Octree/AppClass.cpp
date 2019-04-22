@@ -34,6 +34,11 @@ void Simplex::Application::SpawnEnemies(int count)
 {
 	//make the enemies
 	for (int i = 0; i < count; i++) {
+		String temp = std::to_string(enemyID) + "e";
+
+		if (!temp.find("s")) {
+			int z = 0;
+		}
 		m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", std::to_string(enemyID) + "e", true);
 		//get random x and y pos within a range
 		float x = -10 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (10 - (-10))));
@@ -63,6 +68,14 @@ void Application::Update(void)
 	//update bullet positions
 	for (int k = 0; k < bullets.size(); k++)
 	{
+		if (bullets[k].timer > 180) {
+			m_pEntityMngr->RemoveEntity(bullets[k].uniqueID);
+			
+			//remove from bullets
+			bullets.erase(bullets.begin() + k);
+
+			continue;
+		}
 		bullets[k].Update(m_pEntityMngr->GetModelMatrix(bullets[k].uniqueID));
 	}
 	//make the floor
@@ -89,6 +102,14 @@ void Application::Update(void)
 
 
 		matrix4 enemyMat = m_pEntityMngr->GetModelMatrix(enemyID);
+
+		if (!MyEntity::GetEntity(enemyID)->GetEnemy() || !enemyID.find("s")) {
+			int z = 0;
+			MyEntity::GetEntity(enemyID);
+			int length = m_pEntityMngr->GetEnemyCount();
+			MyEntity* temp = m_pEntityMngr->GetEnemies()[i];
+			temp->GetUniqueID();
+		}
 
 		//enemy has been hit
 		if (MyEntity::GetEntity(enemyID)->GetHit()) {
@@ -127,7 +148,7 @@ void Application::Update(void)
 	bool resolved = false;
 
 	//do collisions
-	for (int i = 0; i < bullets.size(); i++) {
+ 	for (int i = 0; i < bullets.size(); i++) {
 		for (int j = 0; j < m_pEntityMngr->GetEnemyCount(); j++) {
 
 			//get bullet
@@ -143,6 +164,15 @@ void Application::Update(void)
 				//collision detection between bullets and enemies
 				if (bulletRB->IsColliding(enemyRB)) {
 					MyEntity::GetEntity(enemyID)->SetHit(true);
+
+ 					m_pEntityMngr->RemoveEntity(bullets[i].uniqueID);
+
+					//remove from bullets
+					bullets.erase(bullets.begin() + i);
+
+
+					resolved = true;
+					break;
 				}
 			}
 			//has been hit
@@ -153,10 +183,6 @@ void Application::Update(void)
 					printf("colliding");
 
 					m_pEntityMngr->RemoveEntity(enemyID);
-					//m_pEntityMngr->RemoveEntity(bullets[i].uniqueID);
-
-					//remove from bullets
-					bullets.erase(bullets.begin() + i);
 
 					resolved = true;
 					break;

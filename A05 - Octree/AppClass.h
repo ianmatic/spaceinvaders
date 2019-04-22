@@ -19,6 +19,7 @@ Date: 2017/06
 #include <cstdlib>
 #include <ctime>
 
+
 namespace Simplex
 {
 	//Adding Application to the Simplex namespace

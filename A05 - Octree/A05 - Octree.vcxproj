@@ -47,6 +47,7 @@
     <ExecutablePath>$(SolutionDir)include\GL\bin;$(SolutionDir)include\Simplex\bin;$(SolutionDir)include\SFML\bin;$(ExecutablePath)</ExecutablePath>
     <IncludePath>$(SolutionDir)include;$(SolutionDir)res;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)include\GL\lib;$(SolutionDir)include\Simplex\lib;$(SolutionDir)include\SFML\lib;$(LibraryPath)</LibraryPath>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Z_DELETE\</OutDir>
@@ -55,6 +56,7 @@
     <ExecutablePath>$(SolutionDir)include\GL\bin;$(SolutionDir)include\Simplex\bin;$(SolutionDir)include\SFML\bin;$(ExecutablePath)</ExecutablePath>
     <IncludePath>$(SolutionDir)include;$(SolutionDir)res;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)include\GL\lib;$(SolutionDir)include\Simplex\lib;$(SolutionDir)include\SFML\lib;$(LibraryPath)</LibraryPath>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
