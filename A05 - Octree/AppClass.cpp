@@ -34,11 +34,7 @@ void Simplex::Application::SpawnEnemies(int count)
 {
 	//make the enemies
 	for (int i = 0; i < count; i++) {
-		String temp = std::to_string(enemyID) + "e";
 
-		if (!temp.find("s")) {
-			int z = 0;
-		}
 		m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", std::to_string(enemyID) + "e", true);
 		//get random x and y pos within a range
 		float x = -10 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (10 - (-10))));
@@ -47,7 +43,7 @@ void Simplex::Application::SpawnEnemies(int count)
 		matrix4 m4Position = glm::translate(v3Position);
 		m_pEntityMngr->SetModelMatrix(m4Position);
 
-		enemyID++;	
+		enemyID++;
 	}
 }
 
@@ -61,7 +57,7 @@ void Application::Update(void)
 
 	//Is the first person camera active?
 	CameraRotation();
-	
+
 	//Update Entity Manager
 	m_pEntityMngr->Update();
 
@@ -70,7 +66,7 @@ void Application::Update(void)
 	{
 		if (bullets[k].timer > 180) {
 			m_pEntityMngr->RemoveEntity(bullets[k].uniqueID);
-			
+
 			//remove from bullets
 			bullets.erase(bullets.begin() + k);
 
@@ -103,14 +99,6 @@ void Application::Update(void)
 
 		matrix4 enemyMat = m_pEntityMngr->GetModelMatrix(enemyID);
 
-		if (!MyEntity::GetEntity(enemyID)->GetEnemy() || !enemyID.find("s")) {
-			int z = 0;
-			MyEntity::GetEntity(enemyID);
-			int length = m_pEntityMngr->GetEnemyCount();
-			MyEntity* temp = m_pEntityMngr->GetEnemies()[i];
-			temp->GetUniqueID();
-		}
-
 		//enemy has been hit
 		if (MyEntity::GetEntity(enemyID)->GetHit()) {
 			//send enemy flying backward and down
@@ -137,7 +125,7 @@ void Application::Update(void)
 				}
 			}
 		}
-		
+
 		m_pEntityMngr->SetModelMatrix(enemyMat, enemyID);
 	}
 
@@ -147,53 +135,75 @@ void Application::Update(void)
 
 	bool resolved = false;
 
-	//do collisions
- 	for (int i = 0; i < bullets.size(); i++) {
-		for (int j = 0; j < m_pEntityMngr->GetEnemyCount(); j++) {
-
-			//get bullet
-			MyRigidBody* bulletRB = m_pEntityMngr->GetRigidBody(bullets[i].uniqueID);
-			//MyEntity* bullet = m_pEntityMngr->GetEntity(bullets[i].uniqueID);
+	//do collisions when no bullets
+	if (bullets.size() <= 0 && m_pEntityMngr->GetEnemyCount() > 0) {
+		for (int i = 0; i < m_pEntityMngr->GetEnemyCount(); i++) {
 
 			//get enemy
-			String enemyID = m_pEntityMngr->GetEnemies()[j]->GetUniqueID();
-			MyRigidBody* enemyRB = m_pEntityMngr->GetRigidBody(enemyID);
+			String enemyID = m_pEntityMngr->GetEnemies()[i]->GetUniqueID();
 
-			//hasn't been hit yet
-			if (!MyEntity::GetEntity(enemyID)->GetHit()) {
-				//collision detection between bullets and enemies
-				if (bulletRB->IsColliding(enemyRB)) {
-					MyEntity::GetEntity(enemyID)->SetHit(true);
+			//enemy hits floor, don't feel like doing actual collisions, maybe later
+			if (MyEntity::GetEntity(enemyID)->GetRigidBody()->GetMinGlobal().y <= -15) {
+				//collision resolution
+				printf("colliding");
 
- 					m_pEntityMngr->RemoveEntity(bullets[i].uniqueID);
+				m_pEntityMngr->RemoveEntity(enemyID);
 
-					//remove from bullets
-					bullets.erase(bullets.begin() + i);
-
-
-					resolved = true;
-					break;
-				}
+				resolved = true;
+				break;
 			}
-			//has been hit
-			else {
-				//enemy hits floor, don't feel like doing actual collisions, maybe later
-				if (MyEntity::GetEntity(enemyID)->GetRigidBody()->GetMinGlobal().y <= -15) {
-					//collision resolution
-					printf("colliding");
-
-					m_pEntityMngr->RemoveEntity(enemyID);
-
-					resolved = true;
-					break;
-				}
-			}
-		}
-
-		if (resolved) {
-			break;
 		}
 	}
+	else {
+		for (int i = 0; i < bullets.size(); i++) {
+			for (int j = 0; j < m_pEntityMngr->GetEnemyCount(); j++) {
+
+				//get bullet
+				MyRigidBody* bulletRB = m_pEntityMngr->GetRigidBody(bullets[i].uniqueID);
+				//MyEntity* bullet = m_pEntityMngr->GetEntity(bullets[i].uniqueID);
+
+				//get enemy
+				String enemyID = m_pEntityMngr->GetEnemies()[j]->GetUniqueID();
+				MyRigidBody* enemyRB = m_pEntityMngr->GetRigidBody(enemyID);
+
+				//hasn't been hit yet
+				if (!MyEntity::GetEntity(enemyID)->GetHit()) {
+					//collision detection between bullets and enemies
+					if (bulletRB->IsColliding(enemyRB)) {
+						MyEntity::GetEntity(enemyID)->SetHit(true);
+
+						m_pEntityMngr->RemoveEntity(bullets[i].uniqueID);
+
+						//remove from bullets
+						bullets.erase(bullets.begin() + i);
+
+
+						resolved = true;
+						break;
+					}
+				}
+				//has been hit
+				else {
+					//enemy hits floor, don't feel like doing actual collisions, maybe later
+					if (MyEntity::GetEntity(enemyID)->GetRigidBody()->GetMinGlobal().y <= -15) {
+						//collision resolution
+						printf("colliding");
+
+						m_pEntityMngr->RemoveEntity(enemyID);
+
+						resolved = true;
+						break;
+					}
+				}
+			}
+
+			if (resolved) {
+				break;
+			}
+		}
+
+	}
+
 
 	//Add objects to render list
 
@@ -217,19 +227,19 @@ void Application::Display(void)
 	//else {
 	//	root->Display(octID, C_YELLOW);
 	//}
-	
+
 	// draw a skybox
 	m_pMeshMngr->AddSkyboxToRenderList();
-	
+
 	//render list call
 	m_uRenderCallCount = m_pMeshMngr->Render();
 
 	//clear the render list
 	m_pMeshMngr->ClearRenderList();
-	
+
 	//draw gui,
 	DrawGUI();
-	
+
 	//end the current frame (internally swaps the front and back buffers)
 	m_pWindow->display();
 }
