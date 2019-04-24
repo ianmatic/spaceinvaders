@@ -258,37 +258,39 @@ void Simplex::MyEntityManager::RemoveEntity(uint a_uIndex)
 
 
 
+
+
 	//if the list is empty return
 	if (m_sEntityCount == 0)
 		return;
 
 	// if out of bounds choose the last one
 	if (a_uIndex >= m_sEntityCount) {
-		a_uIndex = m_sEntityCount - 1;
-	}
-
-
-	// if the entity is not the very last we swap it for the last one
-	if (a_uIndex != m_sEntityCount - 1)
-	{
-		std::swap(m_mEntityArray[a_uIndex], m_mEntityArray[m_sEntityCount - 1]);
+		printf("ERROR: ENTITY INDEX NOT FOUND\n");
+		return;
+		//a_uIndex = m_sEntityCount - 1;
 	}
 
 	//take care of enemy
-	if (m_mEntityArray[m_sEntityCount - 1]->GetEnemy()) {
+	if (m_mEntityArray[a_uIndex]->GetEnemy()) {
 
 		int enemyIndex = - 1;
 
 		//find enemy index
 		for (int i = 0; i < enemyCount; i++) {
-			if (m_mEntityArray[m_sEntityCount - 1] == enemyArray[i]) {
+
+			MyEntity* temp1 = m_mEntityArray[a_uIndex];
+			MyEntity* temp2 = enemyArray[i];
+
+			if (!m_mEntityArray[a_uIndex]->GetUniqueID().compare(enemyArray[i]->GetUniqueID())) {
 				enemyIndex = i;
+				break;
 			}
 		}
 
 		// if the enemy is not the very last we swap it for the last one
 		if (enemyIndex != enemyCount - 1 && enemyIndex >= 0) {
-			std::swap(enemyArray[enemyIndex], m_mEntityArray[enemyCount - 1]);
+			std::swap(enemyArray[enemyIndex], enemyArray[enemyCount - 1]);
 		}
 
 
@@ -308,6 +310,13 @@ void Simplex::MyEntityManager::RemoveEntity(uint a_uIndex)
 		enemyArray = tempEnemyArray;
 
 		enemyCount--;
+	}
+
+
+	// if the entity is not the very last we swap it for the last one
+	if (a_uIndex != m_sEntityCount - 1)
+	{
+		std::swap(m_mEntityArray[a_uIndex], m_mEntityArray[m_sEntityCount - 1]);
 	}
 
 	
@@ -331,7 +340,7 @@ void Simplex::MyEntityManager::RemoveEntity(uint a_uIndex)
 	//REMOVE one entity FROM the count
 	--m_sEntityCount;
 
-	std::cout << std::endl;
+	//std::cout << std::endl;
 
 	//for (int i = 0; i < m_uEntityCount; i++) {
 	//	std::cout << m_mEntityArray[i]->GetUniqueID() << std::endl;
@@ -340,6 +349,11 @@ void Simplex::MyEntityManager::RemoveEntity(uint a_uIndex)
 void Simplex::MyEntityManager::RemoveEntity(String a_sUniqueID)
 {
 	int nIndex = GetEntityIndex(a_sUniqueID);
+
+	std::cout << "deleting entity id:" << a_sUniqueID << std::endl;
+	if (nIndex == -1)
+		printf("ERROR: ENTITY ID NOT FOUND\n");
+
 	RemoveEntity((uint)nIndex);
 }
 Simplex::String Simplex::MyEntityManager::GetUniqueID(uint a_uIndex)

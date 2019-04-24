@@ -35,6 +35,7 @@ void Simplex::Application::SpawnEnemies(int count)
 	//make the enemies
 	for (int i = 0; i < count; i++) {
 
+		//id is num+e, like 0e
 		m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", std::to_string(enemyID) + "e", true);
 		//get random x and y pos within a range
 		float x = -10 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (10 - (-10))));
@@ -45,6 +46,29 @@ void Simplex::Application::SpawnEnemies(int count)
 
 		enemyID++;
 	}
+
+
+	//for (int z = 10; z > -10; z -= 10) {
+	//	for (int x = -10; x < 10; x += 2) {
+	//		for (int y = -10; y < 10; y += 2) {
+
+	//			std::string tempID = std::to_string(enemyID) + "e";
+
+	//			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", tempID, true);
+
+	//			matrix4 m4Position = glm::translate(vector3(x, y, z));
+	//			m_pEntityMngr->SetModelMatrix(m4Position);
+
+	//			std::cout << tempID << std::endl;
+
+	//			enemyID++;
+	//		}
+	//	}
+	//}
+
+
+
+
 }
 
 void Application::Update(void)
@@ -61,55 +85,66 @@ void Application::Update(void)
 	//Update Entity Manager
 	m_pEntityMngr->Update();
 
-	//update bullet positions
-	for (int k = 0; k < bullets.size(); k++)
-	{
-		if (bullets[k].timer > 180) {
-			m_pEntityMngr->RemoveEntity(bullets[k].uniqueID);
-
-			//remove from bullets
-			bullets.erase(bullets.begin() + k);
-
-			continue;
-		}
-		bullets[k].Update(m_pEntityMngr->GetModelMatrix(bullets[k].uniqueID));
-	}
 	//make the floor
 	matrix4 floorMat = IDENTITY_M4;
 	floorMat = glm::translate(floorMat, vector3(0, -15, 0));
 	floorMat = glm::scale(floorMat, vector3(1000, 1, 1000));
 	m_pMeshMngr->AddCubeToRenderList(floorMat, C_WHITE);
 
+
+
+	//update bullet positions
+	for (int k = 0; k < bullets.size(); k++)
+	{
+		//3 seconds have elapsed, destroy bullet
+		if (bullets[k].timer > 180) {
+
+			//remove from gameplay
+			m_pEntityMngr->RemoveEntity(bullets[k].uniqueID);
+
+			//remove from bullets
+			bullets.erase(bullets.begin() + k);
+
+			k--;
+			continue;
+		}
+		//move the bullet
+		bullets[k].Update(m_pEntityMngr->GetModelMatrix(bullets[k].uniqueID));
+	}
+
+	//for random enemy movement
 	int randNum = rand() % 10;
 
+	//update timer
 	timer -= 1;
 
 	//check to see if all enemies are dead
 	if (m_pEntityMngr->GetEnemyCount() <= 0) {
+
+		//make greater volume of enemies
 		level++;
 		SpawnEnemies(level * 2);
 	}
+
+
 	//move enemies
 	for (int i = 0; i < m_pEntityMngr->GetEnemyCount(); i++) {
 
-		//get enemy
+		//get enemy from id
 		String enemyID = m_pEntityMngr->GetEnemies()[i]->GetUniqueID();
-		MyRigidBody* enemyRB = m_pEntityMngr->GetRigidBody(enemyID);
-
-
 		matrix4 enemyMat = m_pEntityMngr->GetModelMatrix(enemyID);
 
-		//enemy has been hit
+		//enemy has been hit by a bullet
 		if (MyEntity::GetEntity(enemyID)->GetHit()) {
 			//send enemy flying backward and down
 			enemyMat = glm::translate(enemyMat, vector3(0, -1, -.5));
 		}
+		//not hit by a bullet yet
 		else {
 			//move enemy toward player
 			enemyMat = glm::translate(enemyMat, vector3(0, 0, .05));
 
-			//move enemy in x and y directions
-
+			//move enemy in x and y directions every second
 			if (timer <= 0) {
 				if (randNum < 2) {
 					enemyMat = glm::translate(enemyMat, vector3(1, 0, 0));
@@ -126,84 +161,58 @@ void Application::Update(void)
 			}
 		}
 
+		//update entity pos
 		m_pEntityMngr->SetModelMatrix(enemyMat, enemyID);
 	}
 
+	//reset second long timer
 	if (timer <= 0) {
 		timer = 60;
 	}
 
-	bool resolved = false;
 
-	//do collisions when no bullets
-	if (bullets.size() <= 0 && m_pEntityMngr->GetEnemyCount() > 0) {
-		for (int i = 0; i < m_pEntityMngr->GetEnemyCount(); i++) {
+	//do collisions
+	for (int i = 0; i < m_pEntityMngr->GetEnemyCount(); i++) {
 
-			//get enemy
-			String enemyID = m_pEntityMngr->GetEnemies()[i]->GetUniqueID();
+		//get enemy
+		String enemyID = m_pEntityMngr->GetEnemies()[i]->GetUniqueID();
+		MyRigidBody* enemyRB = m_pEntityMngr->GetRigidBody(enemyID);
 
+		//enemy in freefall
+		if (MyEntity::GetEntity(enemyID)->GetHit()) {
 			//enemy hits floor, don't feel like doing actual collisions, maybe later
 			if (MyEntity::GetEntity(enemyID)->GetRigidBody()->GetMinGlobal().y <= -15) {
-				//collision resolution
-				printf("colliding");
-
+				//delete enemy
+				std::cout << "deleting falling enemy id:" << enemyID << std::endl;
 				m_pEntityMngr->RemoveEntity(enemyID);
 
-				resolved = true;
-				break;
+				i--;
+				continue;
 			}
 		}
-	}
-	else {
-		for (int i = 0; i < bullets.size(); i++) {
-			for (int j = 0; j < m_pEntityMngr->GetEnemyCount(); j++) {
+		else {
+			for (int j = 0; j < bullets.size(); j++) {
 
 				//get bullet
-				MyRigidBody* bulletRB = m_pEntityMngr->GetRigidBody(bullets[i].uniqueID);
-				//MyEntity* bullet = m_pEntityMngr->GetEntity(bullets[i].uniqueID);
+				MyRigidBody* bulletRB = m_pEntityMngr->GetRigidBody(bullets[j].uniqueID);
 
-				//get enemy
-				String enemyID = m_pEntityMngr->GetEnemies()[j]->GetUniqueID();
-				MyRigidBody* enemyRB = m_pEntityMngr->GetRigidBody(enemyID);
+				//collision detection between bullets and enemies
+				if (bulletRB->IsColliding(enemyRB)) {
 
-				//hasn't been hit yet
-				if (!MyEntity::GetEntity(enemyID)->GetHit()) {
-					//collision detection between bullets and enemies
-					if (bulletRB->IsColliding(enemyRB)) {
-						MyEntity::GetEntity(enemyID)->SetHit(true);
+					//set in free fall
+					MyEntity::GetEntity(enemyID)->SetHit(true);
 
-						m_pEntityMngr->RemoveEntity(bullets[i].uniqueID);
+					//delete bullet
+					m_pEntityMngr->RemoveEntity(bullets[j].uniqueID);
+					//remove from bullets
+					bullets.erase(bullets.begin() + j);
 
-						//remove from bullets
-						bullets.erase(bullets.begin() + i);
-
-
-						resolved = true;
-						break;
-					}
+					//no longer check this enemy against bul
+					break;
 				}
-				//has been hit
-				else {
-					//enemy hits floor, don't feel like doing actual collisions, maybe later
-					if (MyEntity::GetEntity(enemyID)->GetRigidBody()->GetMinGlobal().y <= -15) {
-						//collision resolution
-						printf("colliding");
-
-						m_pEntityMngr->RemoveEntity(enemyID);
-
-						resolved = true;
-						break;
-					}
-				}
-			}
-
-			if (resolved) {
-				break;
 			}
 		}
-
 	}
-
 
 	//Add objects to render list
 
