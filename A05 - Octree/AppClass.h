@@ -131,7 +131,7 @@ public:
 private:
 
 	//method to spawn enemies
-	void SpawnEnemies(int count);
+	void SpawnEnemies(int count, bool grid);
 #pragma region Initialization / Release
 	/*
 	USAGE: Initialize the window
