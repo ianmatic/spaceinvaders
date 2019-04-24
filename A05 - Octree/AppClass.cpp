@@ -79,6 +79,12 @@ void Application::Update(void)
 	//Is the ArcBall active?
 	ArcBall();
 
+	//update octree
+	m_pEntityMngr->ClearDimensionSetAll();
+
+	SafeDelete(root);
+	root = new MyOctant(octLevels, 5);
+
 	//Is the first person camera active?
 	CameraRotation();
 
@@ -230,12 +236,12 @@ void Application::Display(void)
 	ClearScreen();
 
 	//display octree
-	//if (octID == -1) {
-	//	root->Display(C_YELLOW);
-	//}
-	//else {
-	//	root->Display(octID, C_YELLOW);
-	//}
+	if (octID == -1) {
+		root->Display(C_YELLOW);
+	}
+	else {
+		root->Display(octID, C_YELLOW);
+	}
 
 	// draw a skybox
 	m_pMeshMngr->AddSkyboxToRenderList();

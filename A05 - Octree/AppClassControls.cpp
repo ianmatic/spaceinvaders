@@ -102,6 +102,11 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 		bullets.push_back(b);
 		break;
 	}
+	case sf::Keyboard::C:{
+		//crazy mode
+		SpawnEnemies(1000);
+		break;
+	}
 	case sf::Keyboard::Escape:
 		m_bRunning = false;
 		break;
