@@ -37,9 +37,7 @@ class Application
 
 	int timer = 60; 
 
-	float timeSinceStart = 0;
-	float deltaTime = 0;
-	float oldTimeSinceStart = 0;
+	MyEntity* closestEnemy = nullptr;
 
 private:
 	//level and score info
@@ -129,6 +127,9 @@ public:
 #pragma endregion
 
 private:
+
+	//helper method
+	void FindClosestEnemy();
 
 	//method to spawn enemies
 	void SpawnEnemies(int count, bool grid);

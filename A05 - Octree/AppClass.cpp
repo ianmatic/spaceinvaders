@@ -30,6 +30,28 @@ void Application::InitVariables(void)
 	srand(static_cast <unsigned> (time(0)));
 }
 
+void Simplex::Application::FindClosestEnemy()
+{
+	//enemies exist
+	if (m_pEntityMngr->GetEnemyCount() > 0) {
+
+		//find enemy closest to player in terms of z (biggest z)
+		for (int i = 0; i < m_pEntityMngr->GetEnemyCount(); i++) {
+
+			//get enemy
+			String enemyID = m_pEntityMngr->GetEnemies()[i]->GetUniqueID();
+
+			//update closest enemy if closer (larger z)
+			if (closestEnemy == nullptr) {
+				closestEnemy = MyEntity::GetEntity(enemyID);
+			}
+			else if (MyEntity::GetEntity(enemyID)->GetRigidBody()->GetCenterGlobal().z > closestEnemy->GetRigidBody()->GetCenterGlobal().z) {
+				closestEnemy = MyEntity::GetEntity(enemyID);
+			}
+		}
+	}
+}
+
 void Simplex::Application::SpawnEnemies(int count, bool grid)
 {
 	if (!grid) {
@@ -68,11 +90,8 @@ void Simplex::Application::SpawnEnemies(int count, bool grid)
 		}
 	}*/
 	}
-	
 
-
-
-
+	FindClosestEnemy();
 }
 
 void Application::Update(void)
@@ -199,6 +218,14 @@ void Application::Update(void)
 				m_pEntityMngr->RemoveEntity(enemyID);
 
 				i--;
+
+				//hit the closest enemy
+				if (enemyID == closestEnemy->GetUniqueID()) {
+
+					//recalculate closest enemy
+					FindClosestEnemy();
+				}
+
 				continue;
 			}
 		}
@@ -220,7 +247,7 @@ void Application::Update(void)
 					//remove from bullets
 					bullets.erase(bullets.begin() + j);
 
-					//no longer check this enemy against bul
+					//no longer check this enemy against bullets
 					break;
 				}
 			}
@@ -258,6 +285,22 @@ void Application::Update(void)
 
 	//enemies
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
+
+
+
+	//game over
+	float closestZ = -100;
+	if (closestEnemy != nullptr) {
+		closestZ = closestEnemy->GetRigidBody()->GetCenterGlobal().z;
+	}
+
+	float playerZ = m_pCameraMngr->GetPosition().z;
+
+
+	if (closestZ > playerZ) {
+		m_pMeshMngr->PrintLine("Game Over");
+	}
+
 }
 void Application::Display(void)
 {

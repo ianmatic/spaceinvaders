@@ -36,8 +36,17 @@ void Application::DrawGUI(void)
 		{
 			ImGui::Text("Programmer: \n");
 			ImGui::TextColored(v4Color, m_sProgrammer.c_str());
-			ImGui::Text("FrameRate: %.2f [FPS] -> %.3f [ms/frame]\n",
+			ImGui::Text("FrameRate: %.2f [FPS] -> %.3f [ms/frame]\n\n",
 				ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+
+			ImGui::Text("Controls:\n\n");
+			ImGui::Text("WASD - Move\n");
+			ImGui::Text("Space - shoot\n");
+			ImGui::Text("C - Crazy Mode (test optimization\n");
+			ImGui::Text("+ - Add oct tree level\n");
+			ImGui::Text("- - Remove oct tree level\n");
+
+
 			//ImGui::Text("Levels in Octree: %d\n", octLevels);
 			////ImGui::Text("Octants: %d\n", m_pRoot->GetOctantCount());
 			//ImGui::Text("Objects: %d\n", m_uObjects);
