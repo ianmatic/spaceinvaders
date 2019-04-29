@@ -109,11 +109,14 @@ void Application::Update(void)
 	ArcBall();
 
 	//update octree
-	m_pEntityMngr->ClearDimensionSetAll();
-
-	SafeDelete(root);
-	root = new MyOctant(octLevels, 5);
-
+	static int octTimer = 0;
+	if (octTimer <= 0) {
+		m_pEntityMngr->ClearDimensionSetAll();
+		SafeDelete(root);
+		root = new MyOctant(octLevels, 5);
+		octTimer = 30;
+	}
+	octTimer--;
 	//Is the first person camera active?
 	CameraRotation();
 
