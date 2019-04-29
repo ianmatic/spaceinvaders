@@ -18,6 +18,7 @@ Date: 2017/06
 //stuff for random
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 
 
 namespace Simplex

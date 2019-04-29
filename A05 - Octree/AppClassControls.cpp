@@ -104,7 +104,7 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 	}
 	case sf::Keyboard::C:{
 		//crazy mode
-		SpawnEnemies(1000, false);
+		SpawnEnemies(1000, true);
 		break;
 	}
 	case sf::Keyboard::Escape:

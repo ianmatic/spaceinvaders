@@ -71,24 +71,30 @@ void Simplex::Application::SpawnEnemies(int count, bool grid)
 		}
 	}
 	else {
+		float x = -20;
+		float y = 20;
+		float z = 0;
+		int limit = sqrt(count);
 		//update to spawn enemies in grid
-		/*for (int z = 10; z > -10; z -= 10) {
-		for (int x = -10; x < 10; x += 2) {
-			for (int y = -10; y < 10; y += 2) {
+		//doesnt spawn the exact right amount, might fix
+		for (int i = 0; i < limit; i++) {
+			for (int j = 0; j < limit; j++) {
+				//id is num+e, like 0e
+				m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", std::to_string(enemyID) + "e", true);
 
-				std::string tempID = std::to_string(enemyID) + "e";
-
-				m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", tempID, true);
-
-				matrix4 m4Position = glm::translate(vector3(x, y, z));
+				vector3 v3Position = vector3(x, y, 0);
+				matrix4 m4Position = glm::translate(v3Position);
 				m_pEntityMngr->SetModelMatrix(m4Position);
 
-				std::cout << tempID << std::endl;
-
 				enemyID++;
+				//update x
+				x += 1.2;
 			}
+			//update y and reset x
+			y -= 1.2;
+			x = -20;
 		}
-	}*/
+		std::cout << m_pEntityMngr->GetEnemyCount();
 	}
 
 	FindClosestEnemy();
@@ -116,7 +122,7 @@ void Application::Update(void)
 
 	//make the floor
 	matrix4 floorMat = IDENTITY_M4;
-	floorMat = glm::translate(floorMat, vector3(0, -30, 0));
+	floorMat = glm::translate(floorMat, vector3(0, -40, 0));
 	floorMat = glm::scale(floorMat, vector3(1000, 1, 1000));
 	m_pMeshMngr->AddCubeToRenderList(floorMat, C_WHITE);
 
@@ -166,7 +172,7 @@ void Application::Update(void)
 		//enemy has been hit by a bullet
 		if (MyEntity::GetEntity(enemyID)->GetHit()) {
 			//send enemy flying backward and down
-			enemyMat = glm::translate(enemyMat, vector3(0, -1, -.5));
+			enemyMat = glm::translate(enemyMat, vector3(0, -.7, -.5));
 		}
 		//not hit by a bullet yet
 		else {
@@ -212,7 +218,7 @@ void Application::Update(void)
 		//enemy in freefall
 		if (MyEntity::GetEntity(enemyID)->GetHit()) {
 			//enemy hits floor, don't feel like doing actual collisions, maybe later
-			if (MyEntity::GetEntity(enemyID)->GetRigidBody()->GetMinGlobal().y <= -30) {
+			if (MyEntity::GetEntity(enemyID)->GetRigidBody()->GetMinGlobal().y <= -40) {
 				//delete enemy
 				std::cout << "deleting falling enemy id:" << enemyID << std::endl;
 				m_pEntityMngr->RemoveEntity(enemyID);
@@ -252,27 +258,27 @@ void Application::Update(void)
 				}
 			}
 			//enemies and enemies collisions
-			//for (int j = 0; j < m_pEntityMngr->GetEnemyCount(); j++) {
-			//	if (i == j) {
-			//		//ignore the same enemy
-			//		break;
-			//	}
-			//	else {
-			//		//get enemy
-			//		String enemyID2 = m_pEntityMngr->GetEnemies()[j]->GetUniqueID();
-			//		MyRigidBody* enemyRB2 = m_pEntityMngr->GetRigidBody(enemyID2);
-			//		//collision detection between bullets and enemies
-			//		if (enemyRB2->IsColliding(enemyRB)) {
+			for (int j = 0; j < m_pEntityMngr->GetEnemyCount(); j++) {
+				if (i == j) {
+					//ignore the same enemy
+					break;
+				}
+				else {
+					//get enemy
+					String enemyID2 = m_pEntityMngr->GetEnemies()[j]->GetUniqueID();
+					MyRigidBody* enemyRB2 = m_pEntityMngr->GetRigidBody(enemyID2);
+					//collision detection between bullets and enemies
+					if (enemyRB2->IsColliding(enemyRB)) {
 
-			//			//set in free fall for both
-			//			MyEntity::GetEntity(enemyID)->SetHit(true);
-			//			MyEntity::GetEntity(enemyID2)->SetHit(true);
+						//set in free fall for both
+						MyEntity::GetEntity(enemyID)->SetHit(true);
+						MyEntity::GetEntity(enemyID2)->SetHit(true);
 
 
-			//			break;
-			//		}
-			//	}
-			//}
+						break;
+					}
+				}
+			}
 		}
 	}
 
